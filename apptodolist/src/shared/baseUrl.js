@@ -1,0 +1,1 @@
+export const baseUrl = 'http://private-3c557-leandrolnc.apiary-mock.com/';
