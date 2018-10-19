@@ -1,28 +1,122 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Button, Input } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button, Input, Modal, ModalHeader, ModalBody, Row, Col, Container } from 'reactstrap';
 
 class TaskEditDelete extends Component {
 
     constructor(props) {
       super(props);
+
+      this.toggleEdit = this.toggleEdit.bind(this);
+      this.toggleDelete = this.toggleDelete.bind(this);
+      this.editTask = this.editTask.bind(this);
+      this.deleteTask = this.deleteTask.bind(this);
+      this.onChangeDescription = this.onChangeDescription.bind(this);
+      this.onChangeDone = this.onChangeDone.bind(this);
+  
+      this.state = {
+          task: {},
+          isOpenEdit: false,
+          isOpenDelete: false
+      };      
     }
     
+    toggleEdit() {
+        this.setState({
+            isOpenEdit: !this.state.isOpenEdit
+        });
+      }   
+
+      toggleDelete() {
+        this.setState({
+            isOpenDelete: !this.state.isOpenDelete
+        });
+      }         
+
+    editTask = ()=>{
+        this.setState({
+            isOpenEdit: true, 
+            task: this.props.task
+        });
+    }
+
+    deleteTask = () =>{
+        this.setState({
+            isOpenDelete: true, 
+            task: this.props.task
+        });
+    }
+
+    onChangeDescription = (event) =>{
+
+        let tsk = Object.assign({}, this.state.task);
+        tsk.description = event.target.value;
+        this.setState({task: tsk});
+    }
+
+    onChangeDone = (event) => {
+        //let tsk = Object.assign({}, this.state.task);
+        //tsk.description = event.target.value;
+        //this.setState({task: tsk});
+        console.log(event.target.value);
+    }
+
+    doEdit = () =>{
+
+    }
+
+    doDelete = () =>{
+
+    }
+
     componentDidMount() {
-      /*  
-      this.props.fetchDishes();
-      this.props.fetchComments();
-      this.props.fetchPromos();
-      this.props.fetchLeaders();
-      */
+        
     }
 
     
     render() {
 
         return(
-            <ListGroup>
-                
-            </ListGroup>
+            <Container>
+                <div>
+                    <Button color="link" onClick={this.editTask}>Edit</Button>/
+                    <Button color="link" onClick={this.deleteTask}>Delete</Button>
+                </div>
+                <Modal isOpen={this.state.isOpenEdit} toggle={this.toggleEdit}>
+                    <ModalHeader toggle={this.toggleModal}>Edit task</ModalHeader>
+                    <ModalBody>
+                        <Row className="form-group">
+                            <Col>
+                                <Input type="checkbox" checked={this.state.task.done} onChange={this.onChangeDone}/>{' '}
+                            </Col>
+                            <Col>
+                                <Input type="text" value={this.state.task.description} onChange={this.onChangeDescription}/>    
+                            </Col>
+                            <Col>
+                                <Button onClick={this.doEdit}>Save</Button>
+                            </Col>
+                        </Row>
+                    </ModalBody>
+                </Modal>
+                <Modal isOpen={this.state.isOpenDelete} toggle={this.toggleDelete}>
+                    <ModalHeader toggle={this.toggleModal}>Delete task</ModalHeader>
+                    <ModalBody>
+                        <Row className="form-group">
+                            <Col>
+                                {this.state.task.description}
+                            </Col>
+                            <Col>
+                                Do you confirm this operation?  
+                            </Col>
+                            <Col>
+                                <Button >Confirm</Button>
+
+                                <Button>Cancel</Button>
+                            </Col>
+                        </Row>
+                    </ModalBody>
+                </Modal>
+
+            </Container>
         );
       
     }
@@ -52,10 +146,7 @@ const Tasks = (props)=>{
                         </div>
                     </div>
                     <div className="float-left">
-                        <div>
-                            <Button color="link">Edit</Button>/
-                            <Button color="link">Delete</Button>
-                        </div>
+                        <TaskEditDelete task={tsk} handleEdit={props.editTask} />
                     </div>                    
                 </div>
             </ListGroupItem>
