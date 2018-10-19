@@ -1,5 +1,6 @@
 {
   "name": "apptodolist",
+  "main": "lib/index.js",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,9 +16,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "flow-remove-types src/ -d lib/",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepublish": "npm run build",
+    "flow": "flow"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -27,5 +30,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "flow-bin": "^0.83.0",
+    "flow-remove-types": "^1.2.3"
+  }
 }
