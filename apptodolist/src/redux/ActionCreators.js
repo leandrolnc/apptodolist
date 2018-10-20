@@ -74,10 +74,10 @@ export const addTasks = (tasks) => ({
     payload: tasks
 });
 
-export const editTask = (task => (dispatch) => {
+export const updateTask = (task => (dispatch) => {
 
     return fetch(baseUrl + 'etittask', {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(task),
         headers: {
           "Content-Type": "application/json"
@@ -98,5 +98,31 @@ export const editTask = (task => (dispatch) => {
       })
     .then(response => response.json())
     .then(tasks => dispatch(addTasks(tasks)))
-    .catch(error =>  { console.log('edit task', error.message); alert('Your task could not be edited\nError: '+error.message); });
+    .catch(error =>  { console.log('edit task', error.message); alert('Your task could not be saved\nError: '+error.message); });
+});
+
+export const deleteTask = (id => (dispatch) => {
+
+    return fetch(baseUrl + '/deletetask/' + id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "text/html"
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            throw error;
+      })
+    .then(response => response.json())
+    .then(tasks => dispatch(addTasks(tasks)))
+    .catch(error =>  { console.log('delete task', error.message); alert('Your task could not be deleted\nError: '+error.message); });
 });

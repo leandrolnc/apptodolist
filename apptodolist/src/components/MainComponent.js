@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Home from './HomeComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { postTask, fetchTasks, editTask } from '../redux/ActionCreators';
+import { postTask, fetchTasks, updateTask, deleteTask } from '../redux/ActionCreators';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
@@ -14,7 +14,8 @@ const mapStateToProps = state => {
   const mapDispatchToProps = dispatch => ({
     postTask: (description) => dispatch(postTask(description)),
     fetchTasks: () => { dispatch(fetchTasks())},
-    editTask: (task) => {dispatch(editTask(task))}
+    updateTask: (task) => {dispatch(updateTask(task))},
+    deleteTask: (id) => {dispatch(deleteTask(id))}
   });
 
 class Main extends Component {
@@ -37,7 +38,8 @@ class Main extends Component {
                 <Header />
                 <Home tasks={this.props.tasks} 
                     postTask={this.props.postTask}
-                    editTask={this.props.editTask}
+                    updateTask={this.props.updateTask}
+                    deleteTask={this.props.deleteTask}
                     />
                 <Footer/>
             </div>

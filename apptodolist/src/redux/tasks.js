@@ -30,14 +30,15 @@ export const Tasks = (state = {isLoading: true,
                 ...state,
                 isLoading: true,
                 errMess: null,
-                task: action.payload
+                tasks: action.payload
             };
 
         case ActionTypes.DELETE_TASK:
             return {
                 ...state,
                 isLoading: false,
-                errMess: action.payload
+                errMess: action.payload,
+                tasks: action.payload
             };
         
 

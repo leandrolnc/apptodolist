@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Button, Input, Modal, ModalHeader, ModalBody, Row, Col, Container } from 'reactstrap';
-
+//@flow
 class TaskEditDelete extends Component {
 
     constructor(props) {
@@ -54,18 +54,18 @@ class TaskEditDelete extends Component {
     }
 
     onChangeDone = (event) => {
-        //let tsk = Object.assign({}, this.state.task);
-        //tsk.description = event.target.value;
-        //this.setState({task: tsk});
-        console.log(event.target.value);
+        let tsk = Object.assign({}, this.state.task);
+        tsk.done = !this.state.task.done;
+        this.setState({task: tsk});
+        //console.log(event.target.value);
     }
 
-    doEdit = () =>{
-
+    doUpdate = () =>{
+        this.props.updateTask(this.state.task);
     }
 
     doDelete = () =>{
-
+        this.props.deleteTask(this.state.task.id);
     }
 
     componentDidMount() {
@@ -92,7 +92,7 @@ class TaskEditDelete extends Component {
                                 <Input type="text" value={this.state.task.description} onChange={this.onChangeDescription}/>    
                             </Col>
                             <Col>
-                                <Button onClick={this.doEdit}>Save</Button>
+                                <Button onClick={this.doUpdate}>Save</Button>
                             </Col>
                         </Row>
                     </ModalBody>
@@ -108,9 +108,9 @@ class TaskEditDelete extends Component {
                                 Do you confirm this operation?  
                             </Col>
                             <Col>
-                                <Button >Confirm</Button>
+                                <Button onClick={this.doDelete}>Confirm</Button>
 
-                                <Button>Cancel</Button>
+                                <Button onClick={this.toggleDelete}>Cancel</Button>
                             </Col>
                         </Row>
                     </ModalBody>
@@ -146,7 +146,7 @@ const Tasks = (props)=>{
                         </div>
                     </div>
                     <div className="float-left">
-                        <TaskEditDelete task={tsk} handleEdit={props.editTask} />
+                        <TaskEditDelete task={tsk} updateTask={props.updateTask} deleteTask={props.deleteTask}/>
                     </div>                    
                 </div>
             </ListGroupItem>

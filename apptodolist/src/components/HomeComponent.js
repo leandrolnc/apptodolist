@@ -48,7 +48,10 @@ class Home extends Component {
                         <h4>Tasks</h4>
                         <Card>
                             <CardBody>
-                                <Tasks tasks={this.props.tasks.tasks} editTask={this.props.editTask}/>
+                                <Tasks tasks={this.props.tasks.tasks} 
+                                    updateTask={this.props.updateTask}
+                                    deleteTask={this.props.deleteTask}
+                                    />
                             </CardBody>
                         </Card>
     
