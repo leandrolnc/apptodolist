@@ -1,1 +1,1 @@
-export const baseUrl = 'http://private-3c557-leandrolnc.apiary-mock.com/';
+export const baseUrl = 'http://localhost:8000/';

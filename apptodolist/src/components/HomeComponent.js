@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Tasks from './TaskComponent'
-import { InputGroup, Container, Row, Col, Input, InputGroupAddon, Button, CardBody, Card  } from 'reactstrap';
+import { InputGroup, Container, Row, Col, Input, InputGroupAddon, Button, CardBody, Card, Label  } from 'reactstrap';
 
 
 class Home extends Component {
@@ -55,6 +55,14 @@ class Home extends Component {
                             </CardBody>
                         </Card>
     
+                    </Col>
+                </Row>
+                <Row >
+                    <Col xs="auto">
+                       Hide completed
+                    </Col>
+                    <Col xs="auto">
+                        <Input type="checkbox" />{' '}
                     </Col>
                 </Row>
             </Container>

@@ -12,8 +12,8 @@ export const postTask = (description) => (dispatch) => {
         description: description
     };
     
-    return fetch(baseUrl + 'newtask', {
-        method: "POST",
+    return fetch(baseUrl + 'todos', {
+        method: "PUT",
         body: JSON.stringify(newTask),
         headers: {
           "Content-Type": "application/json"
@@ -41,7 +41,8 @@ export const fetchTasks = () => (dispatch) => {
 
     dispatch(tasksLoading(true));
 
-    return fetch(baseUrl + 'tasks')
+    return fetch(baseUrl + 'todos', {
+      crossDomain:true})
     .then(response => {
         if (response.ok) {
           return response;
@@ -74,11 +75,25 @@ export const addTasks = (tasks) => ({
     payload: tasks
 });
 
+export const refreshTask = (task) =>({
+    type: ActionTypes.REFRESH_TASK,
+    payload: task
+});
+
+export const deleteTask = (id) =>({
+  type: ActionTypes.DELETE_TASK,
+  payload: id
+});
+
 export const updateTask = (task => (dispatch) => {
 
-    return fetch(baseUrl + 'etittask', {
-        method: "PUT",
-        body: JSON.stringify(task),
+    let obj = {};
+    if(task.description != undefined) obj.description = task.description;
+    if(task.status != undefined) obj.status = task.status;
+
+    return fetch(baseUrl + 'todo/' + task.id, {
+        method: "PATCH",
+        body: JSON.stringify(obj),
         headers: {
           "Content-Type": "application/json"
         },
@@ -97,13 +112,13 @@ export const updateTask = (task => (dispatch) => {
             throw error;
       })
     .then(response => response.json())
-    .then(tasks => dispatch(addTasks(tasks)))
+    .then(task => dispatch(refreshTask(task)))
     .catch(error =>  { console.log('edit task', error.message); alert('Your task could not be saved\nError: '+error.message); });
 });
 
 export const deleteTask = (id => (dispatch) => {
 
-    return fetch(baseUrl + '/deletetask/' + id, {
+    return fetch(baseUrl + '/todo/' + id, {
         method: "DELETE",
         headers: {
           "Content-Type": "text/html"
@@ -122,7 +137,6 @@ export const deleteTask = (id => (dispatch) => {
       error => {
             throw error;
       })
-    .then(response => response.json())
-    .then(tasks => dispatch(addTasks(tasks)))
+    .then(id => dispatch(deleteTask(id)))
     .catch(error =>  { console.log('delete task', error.message); alert('Your task could not be deleted\nError: '+error.message); });
 });

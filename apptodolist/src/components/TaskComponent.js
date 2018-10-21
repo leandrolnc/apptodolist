@@ -55,13 +55,13 @@ class TaskEditDelete extends Component {
 
     onChangeDone = (event) => {
         let tsk = Object.assign({}, this.state.task);
-        tsk.done = !this.state.task.done;
+        tsk.state = !this.state.task.state;
         this.setState({task: tsk});
         //console.log(event.target.value);
     }
 
-    doUpdate = () =>{
-        this.props.updateTask(this.state.task);
+    doUpdateDesc = () =>{
+        this.props.updateTask({id: this.state.task.id, description: this.state.task.description});
     }
 
     doDelete = () =>{
@@ -86,13 +86,13 @@ class TaskEditDelete extends Component {
                     <ModalBody>
                         <Row className="form-group">
                             <Col>
-                                <Input type="checkbox" checked={this.state.task.done} onChange={this.onChangeDone}/>{' '}
+                                <Input type="checkbox" checked={this.state.task.state} onChange={this.onChangeDone}/>{' '}
                             </Col>
                             <Col>
                                 <Input type="text" value={this.state.task.description} onChange={this.onChangeDescription}/>    
                             </Col>
                             <Col>
-                                <Button onClick={this.doUpdate}>Save</Button>
+                                <Button onClick={this.doUpdateDesc}>Save</Button>
                             </Col>
                         </Row>
                     </ModalBody>
@@ -138,7 +138,7 @@ const Tasks = (props)=>{
             <ListGroupItem key={tsk.id}>
                 <div className="clearfix">
                     <div className="float-left">
-                        <Input type="checkbox" checked={tsk.done}/>{' '}
+                        <Input type="checkbox" checked={tsk.state}/>{' '}
                     </div>
                     <div className="float-left">
                         <div>

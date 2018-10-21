@@ -40,6 +40,18 @@ export const Tasks = (state = {isLoading: true,
                 errMess: action.payload,
                 tasks: action.payload
             };
+
+            case ActionTypes.REFRESH_TASK:
+                let task = state.tasks.find(t=>{return t.id == action.payload.id});
+                task.description = action.payload.description;
+                task.status = action.payload.status;    
+
+            return {
+                ...state,
+                isLoading: false,
+                errMess: action.payload,
+                tasks: state.tasks
+            };            
         
 
         default:
