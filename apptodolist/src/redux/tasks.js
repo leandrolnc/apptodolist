@@ -34,14 +34,18 @@ export const Tasks = (state = {isLoading: true,
             };
 
         case ActionTypes.DELETE_TASK:
+            //console.log("Id retornado");
+            //console.log(action.payload);
+            let tasks = state.tasks.filter(t=>{return t.id != action.payload});
+
             return {
                 ...state,
                 isLoading: false,
                 errMess: action.payload,
-                tasks: action.payload
-            };
+                tasks: tasks
+            };   
 
-            case ActionTypes.REFRESH_TASK:
+        case ActionTypes.REFRESH_TASK:
                 let task = state.tasks.find(t=>{return t.id == action.payload.id});
                 task.description = action.payload.description;
                 task.status = action.payload.status;    

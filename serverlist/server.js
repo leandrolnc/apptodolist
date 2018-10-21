@@ -1,29 +1,30 @@
 'use strict';
 
 const Hapi=require('hapi');
+const Joi=require('joi');
 
 const Ctrl=require('./controller/todoControl');
 
 //import {addTask, updateTask} from './controller/todoControl';
 
-const data = 
+let data = 
     [{
         id: 1,
-        state: false,
         description: 'Tarefa 1',
-        dateAdded: '2018-10-21T10:00:00'
+        dateAdded: '2018-10-21T10:00:00',
+        state: false
     },
     {
         id: 2,
-        state: true,
         description: 'Tarefa 2',
-        dateAdded: '2018-10-22T10:00:00'
+        dateAdded: '2018-10-22T10:00:00',
+        state: true
     },
     {
         id: 3,
-        state: false,
         description: 'Tarefa 3',
-        dateAdded: '2018-10-23T10:00:00'
+        dateAdded: '2018-10-23T10:00:00',
+        state: false
     }
     ];
 
@@ -33,7 +34,6 @@ const server= new Hapi.server({
     port:8000,
     routes: {cors: true}
 });
-
 
 server.inject({method: 'OPTIONS', url:'/', headers: {
     origin: '*',
@@ -48,16 +48,6 @@ server.inject({method: 'OPTIONS', url:'/', headers: {
 });
 
 
-
-// Add the route
-server.route({
-    method:'GET',
-    path:'/hello',
-    handler:function(request,h) {
-
-        return'hello world';
-    }
-});
 
 // GET TODOS
 server.route({
@@ -74,6 +64,13 @@ server.route({
     path:'/todos',
     handler:function(request,h) {
         return h.response(Ctrl.addTask(data, request.payload)).code(200);
+    },
+    options: {
+        validate: {
+            payload: {
+                description: Joi.string().min(1).max(100)
+            }
+        }
     }
 });
 
@@ -83,21 +80,20 @@ server.route({
     path:'/todo/{id}',
     handler:function(request,h) {
 
-        let statusCode = 200;
+        let statusCode = {code: 200};
         let task = {};
 
-        try{
-            task = Ctrl.updateTask(data, request.payload, request.params.id);
-        }
-        catch(error){
-            switch(error){
-                case 'NOTFOUND': statusCode = 404; break;
-                case 'BADREQUEST': statusCode = 400; break;
-                default: statusCode = 500; task.error = error;
+        
+        task = Ctrl.updateTask(data, request.payload, request.params.id, statusCode);
+       
+        return h.response(task).code(statusCode.code);
+    },
+    options: {
+        validate: {
+            params: {
+                id: Joi.number().integer().min(1)
             }
         }
-
-        return h.response(task).code(statusCode);
     }
 });
 
@@ -107,20 +103,20 @@ server.route({
     path:'/todo/{id}',
     handler:function(request,h) {
 
-        let statusCode = 200;
-        let task = {};
-
-        try{
-            task = Ctrl.deleteTask(data, request.params.id);
-        }
-        catch(error){
-            switch(error){
-                case 'NOTFOUND': statusCode = 404; break;
-                default: statusCode = 500; task.error = error;
+        let statusCode = {code: 200};
+        let tasks = {};
+ 
+        tasks = Ctrl.deleteTask(data, request.params.id, statusCode);
+        data = tasks;
+ 
+        return h.response({}).code(statusCode.code);
+    },
+    options: {
+        validate: {
+            params: {
+                id: Joi.number().integer().min(1)
             }
         }
-
-        return h.response(task).code(statusCode);
     }
 });
 
@@ -128,6 +124,7 @@ server.route({
 async function start() {
 
     try {
+        await server.register([require('vision'), require('inert'), require('lout')]);
         await server.start();
     }
     catch (err) {

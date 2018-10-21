@@ -80,7 +80,7 @@ export const refreshTask = (task) =>({
     payload: task
 });
 
-export const deleteTask = (id) =>({
+export const deleteTaskId = (id) =>({
   type: ActionTypes.DELETE_TASK,
   payload: id
 });
@@ -89,7 +89,7 @@ export const updateTask = (task => (dispatch) => {
 
     let obj = {};
     if(task.description != undefined) obj.description = task.description;
-    if(task.status != undefined) obj.status = task.status;
+    if(task.state != undefined) obj.state = task.state;
 
     return fetch(baseUrl + 'todo/' + task.id, {
         method: "PATCH",
@@ -118,7 +118,7 @@ export const updateTask = (task => (dispatch) => {
 
 export const deleteTask = (id => (dispatch) => {
 
-    return fetch(baseUrl + '/todo/' + id, {
+    return fetch(baseUrl + 'todo/' + id, {
         method: "DELETE",
         headers: {
           "Content-Type": "text/html"
@@ -127,7 +127,7 @@ export const deleteTask = (id => (dispatch) => {
     })
     .then(response => {
         if (response.ok) {
-          return response;
+          return id;
         } else {
           var error = new Error('Error ' + response.status + ': ' + response.statusText);
           error.response = response;
@@ -137,6 +137,6 @@ export const deleteTask = (id => (dispatch) => {
       error => {
             throw error;
       })
-    .then(id => dispatch(deleteTask(id)))
+    .then(id => dispatch(deleteTaskId(id)))
     .catch(error =>  { console.log('delete task', error.message); alert('Your task could not be deleted\nError: '+error.message); });
 });

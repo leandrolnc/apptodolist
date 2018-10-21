@@ -2,6 +2,8 @@ module.exports = {
     
     addTask(tasks, obj){
 
+        let datetime = new Date();
+
         let newTsk = {
             id: 1,
             description: '',
@@ -12,23 +14,27 @@ module.exports = {
         if(tasks.length > 0){
 
             let maxId = Math.max.apply(Math,tasks.map(function(o) { return o.id; }));
-            let datetime = new Date();
+            
 
-            tsk.id = maxId++;
-            tsk.description = obj.description;
+            newTsk.id = ++maxId;
+            newTsk.description = obj.description;
         }
         else{
-            tsk.description = obj.description;
+            newTsk.description = obj.description;
         }
-        return tsk;
+
+        tasks.push(newTsk);
+
+        return newTsk;
     },
 
-    updateTask(tasks, task, id){
+    updateTask(tasks, task, id, statusCode){
         
         let tsk = tasks.find(t=>{return t.id == id});
 
         if(tsk == undefined){
-            throw new Error('NOTFOUND');
+            statusCode.code = 404;
+            return {};
         }
         else{
             if(task.description)
@@ -36,7 +42,8 @@ module.exports = {
 
             if(task.state != undefined){
                 if (task.state == tsk.state){
-                    throw new Error('BADREQUEST');
+                    statusCode.code = 400;
+                    return {};
                 }
                 tsk.state = task.state;
             }
@@ -45,12 +52,14 @@ module.exports = {
         return tsk;
     },
 
-    deleteTask(tasks, id){
+    deleteTask(tasks, id, statusCode){
         
-        let tsk = tasks.find(t=>{return t.id != id});
+        let tsk = tasks.filter(t=>{return t.id != id});
 
-        if(tsk == undefined){
-            throw new Error('NOTFOUND');
+        let aux = tasks.find(t=>{return t.id == id});
+
+        if(aux == undefined){
+            statusCode.code = 404;
         }
 
         return tsk;

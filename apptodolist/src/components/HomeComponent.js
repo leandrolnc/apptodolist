@@ -19,6 +19,7 @@ class Home extends Component {
     handleSubmit() {
         if(this.state.description.length > 0){
             this.props.postTask(this.state.description);
+            this.setState({description: ''});
         };
     }       
 

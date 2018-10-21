@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Button, Input, Modal, ModalHeader, ModalBody, Row, Col, Container } from 'reactstrap';
 //@flow
+import React, { Component } from 'react';
+import { ListGroup, ListGroupItem, Button, Input, Modal, ModalHeader, ModalBody, Row, Col, Container, InputGroup, InputGroupAddon } from 'reactstrap';
+
 class TaskEditDelete extends Component {
 
     constructor(props) {
@@ -14,7 +15,7 @@ class TaskEditDelete extends Component {
       this.onChangeDone = this.onChangeDone.bind(this);
   
       this.state = {
-          task: {},
+          task: props.task,
           isOpenEdit: false,
           isOpenDelete: false
       };      
@@ -34,7 +35,7 @@ class TaskEditDelete extends Component {
 
     editTask = ()=>{
         this.setState({
-            isOpenEdit: true, 
+            isOpenEdit: true,
             task: this.props.task
         });
     }
@@ -54,21 +55,38 @@ class TaskEditDelete extends Component {
     }
 
     onChangeDone = (event) => {
+        console.log(event.target.value);
+        
+        this.props.updateTask({id: this.state.task.id, state: !this.state.task.state});
+
         let tsk = Object.assign({}, this.state.task);
         tsk.state = !this.state.task.state;
         this.setState({task: tsk});
-        //console.log(event.target.value);
     }
 
     doUpdateDesc = () =>{
         this.props.updateTask({id: this.state.task.id, description: this.state.task.description});
+        this.toggleEdit();
     }
 
     doDelete = () =>{
         this.props.deleteTask(this.state.task.id);
+        
     }
 
     componentDidMount() {
+        
+    }
+
+    handleKeyPress = (e) =>{
+        console.log(e.keyCode);
+        
+        if(e.keyCode === 13){
+            this.doUpdateDesc();
+        }
+        else if (e.keyCode === 27){
+            this.toggleEdit();
+        }
         
     }
 
@@ -77,26 +95,43 @@ class TaskEditDelete extends Component {
 
         return(
             <Container>
-                <div>
-                    <Button color="link" onClick={this.editTask}>Edit</Button>/
-                    <Button color="link" onClick={this.deleteTask}>Delete</Button>
-                </div>
-                <Modal isOpen={this.state.isOpenEdit} toggle={this.toggleEdit}>
-                    <ModalHeader toggle={this.toggleModal}>Edit task</ModalHeader>
-                    <ModalBody>
-                        <Row className="form-group">
-                            <Col>
-                                <Input type="checkbox" checked={this.state.task.state} onChange={this.onChangeDone}/>{' '}
-                            </Col>
-                            <Col>
-                                <Input type="text" value={this.state.task.description} onChange={this.onChangeDescription}/>    
-                            </Col>
-                            <Col>
-                                <Button onClick={this.doUpdateDesc}>Save</Button>
-                            </Col>
-                        </Row>
-                    </ModalBody>
-                </Modal>
+                <Row className="form-group">
+                    <Col xs="1">
+                        <Input type="checkbox" checked={this.state.task.state} onChange={this.onChangeDone}/>{' '}
+                    </Col>
+                    <Col xs="6">{ 
+
+                            (!this.state.isOpenEdit ? 
+                            <div>
+                                {this.props.task.description}
+                            </div>
+                            :
+                            <div>
+                                <InputGroup>
+                                    <Input maxLength="100" value={this.state.task.description} onChange={this.onChangeDescription} onKeyDown={this.handleKeyPress}/>
+                                    <InputGroupAddon addonType="append">
+                                        <Button color="secondary" onClick={this.doUpdateDesc}>Save</Button>
+                                    </InputGroupAddon>
+                                </InputGroup>                            
+                            </div>
+                            )
+                        }
+  
+                    </Col>
+                    <Col >
+                        
+                            {(!this.state.isOpenEdit ? 
+                                <div>
+                                <Button color="link" onClick={this.toggleEdit}>Edit</Button>/
+                                <Button color="link" onClick={this.deleteTask}>Delete</Button>
+                                </div>
+                             :
+                             <div></div>)                            
+                            }
+                        
+                    </Col>
+                </Row>
+
                 <Modal isOpen={this.state.isOpenDelete} toggle={this.toggleDelete}>
                     <ModalHeader toggle={this.toggleModal}>Delete task</ModalHeader>
                     <ModalBody>
@@ -136,19 +171,7 @@ const Tasks = (props)=>{
             return(
                 
             <ListGroupItem key={tsk.id}>
-                <div className="clearfix">
-                    <div className="float-left">
-                        <Input type="checkbox" checked={tsk.state}/>{' '}
-                    </div>
-                    <div className="float-left">
-                        <div>
-                            {tsk.description}
-                        </div>
-                    </div>
-                    <div className="float-left">
-                        <TaskEditDelete task={tsk} updateTask={props.updateTask} deleteTask={props.deleteTask}/>
-                    </div>                    
-                </div>
+                <TaskEditDelete task={tsk} updateTask={props.updateTask} deleteTask={props.deleteTask}/>
             </ListGroupItem>
             );
         });
