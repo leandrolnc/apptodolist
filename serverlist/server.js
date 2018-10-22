@@ -54,7 +54,8 @@ server.route({
     method:'GET',
     path:'/todos',
     handler:function(request,h) {
-        return h.response(data).code(200);
+        let tasks = Ctrl.filterTasks(data,request.query.filter, request.query.orderBy);
+        return h.response(tasks).code(200);
     }
 });
 

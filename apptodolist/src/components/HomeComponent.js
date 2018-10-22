@@ -10,9 +10,13 @@ class Home extends Component {
 
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleHide = this.handleHide.bind(this);
+        this.handleOrder = this.handleOrder.bind(this);
     
         this.state = {
-            description: ''
+            description: '',
+            hideComplete: false,
+            orderBy: 'DATE_ADDED'
         };
     }
 
@@ -25,6 +29,25 @@ class Home extends Component {
 
     handleOnChange(event){
         this.setState({description: event.target.value});
+    }
+
+    handleHide(){
+        this.setState({hideComplete: !this.state.hideComplete});
+
+        let filter = (!this.state.hideComplete ? 'INCOMPLETE' : undefined); 
+
+        this.props.fetchTask(filter, this.state.orderBy);
+    }
+
+    handleOrder(){
+        if(this.state.orderBy == 'DATE_ADDED'){
+            this.setState({orderBy: 'DESCRIPTION'});
+        }
+        else{
+            this.setState({orderBy: 'DATE_ADDED'});
+        }
+        let filter = (this.state.hideComplete ? 'INCONPLETE' : undefined); 
+        this.props.fetchTask(filter, this.state.orderBy);
     }
 
     render() {
@@ -46,12 +69,13 @@ class Home extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <h4>Tasks</h4>
+                        <Button color="link" onClick={this.handleOrder}>Tasks</Button>
                         <Card>
                             <CardBody>
                                 <Tasks tasks={this.props.tasks.tasks} 
                                     updateTask={this.props.updateTask}
                                     deleteTask={this.props.deleteTask}
+                                    hideComplete={this.state.hideComplete}
                                     />
                             </CardBody>
                         </Card>
@@ -63,7 +87,7 @@ class Home extends Component {
                        Hide completed
                     </Col>
                     <Col xs="auto">
-                        <Input type="checkbox" />{' '}
+                        <Input type="checkbox" onChange={this.handleHide}/>{' '}
                     </Col>
                 </Row>
             </Container>

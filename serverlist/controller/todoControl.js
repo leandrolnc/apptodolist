@@ -63,5 +63,36 @@ module.exports = {
         }
 
         return tsk;
-    }    
+    },
+
+    filterTasks(tasks, filter, orderBy){
+
+        let aux = Object.assign([], tasks);
+
+        if(filter == 'INCOMPLETE'){
+            aux = aux.filter(t=>{return !t.state})
+        }
+
+        switch(orderBy){
+            case 'DESCRIPTION':
+
+                aux = aux.sort(function(a,b){
+                    return (a.description > b.description)
+                });
+
+                break;
+
+            default:
+                aux = aux.sort(function(a,b){
+                    return (new Date(a.dateAdded)-new Date(b.dateAdded))
+                });            
+
+                break;
+
+        }
+
+        return aux;
+    }
+
+
 }

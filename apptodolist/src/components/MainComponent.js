@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 
   const mapDispatchToProps = dispatch => ({
     postTask: (description) => dispatch(postTask(description)),
-    fetchTasks: () => { dispatch(fetchTasks())},
+    fetchTasks: (filter, orderBy) => { dispatch(fetchTasks(filter, orderBy))},
     updateTask: (task) => {dispatch(updateTask(task))},
     deleteTask: (id) => {dispatch(deleteTask(id))}
   });
@@ -26,7 +26,7 @@ class Main extends Component {
   
     componentDidMount() {
       
-      this.props.fetchTasks();
+      this.props.fetchTasks('ALL', undefined);
       
     }
   
@@ -40,6 +40,7 @@ class Main extends Component {
                     postTask={this.props.postTask}
                     updateTask={this.props.updateTask}
                     deleteTask={this.props.deleteTask}
+                    fetchTask={this.props.fetchTasks}
                     />
                 <Footer/>
             </div>

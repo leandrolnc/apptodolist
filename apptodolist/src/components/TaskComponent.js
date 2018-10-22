@@ -169,7 +169,6 @@ const Tasks = (props)=>{
     else{
         const tasks =  props.tasks.map((tsk)=>{
             return(
-                
             <ListGroupItem key={tsk.id}>
                 <TaskEditDelete task={tsk} updateTask={props.updateTask} deleteTask={props.deleteTask}/>
             </ListGroupItem>

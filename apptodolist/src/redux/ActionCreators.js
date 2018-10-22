@@ -37,11 +37,20 @@ export const postTask = (description) => (dispatch) => {
     .catch(error =>  { console.log('post task', error.message); alert('Your task could not be posted\nError: '+error.message); });
 };
 
-export const fetchTasks = () => (dispatch) => {
+export const fetchTasks = (filter, orderBy) => (dispatch) => {
 
     dispatch(tasksLoading(true));
 
-    return fetch(baseUrl + 'todos', {
+    let url = baseUrl + 'todos';
+    if(filter) url = url+'?filter=' + filter;
+    url = url + (filter && orderBy ? '&' : '?');
+    if(orderBy) url += 'orderBy=' + orderBy;
+
+    console.log('filter: ' + filter);
+    console.log('orderBy: ' + orderBy);
+    console.log(url);
+
+    return fetch(url, {
       crossDomain:true})
     .then(response => {
         if (response.ok) {
