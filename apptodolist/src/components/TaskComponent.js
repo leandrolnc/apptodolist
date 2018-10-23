@@ -139,13 +139,21 @@ class TaskEditDelete extends Component {
                             <Col>
                                 {this.state.task.description}
                             </Col>
+
+                        </Row>
+                        <Row className="form-group">
                             <Col>
                                 Do you confirm this operation?  
                             </Col>
-                            <Col>
-                                <Button onClick={this.doDelete}>Confirm</Button>
-
-                                <Button onClick={this.toggleDelete}>Cancel</Button>
+                        </Row>
+                        <Row>
+                            <Col xs="6">
+                            </Col>
+                            <Col xs="3">
+                                <Button onClick={this.doDelete} color="info">Confirm</Button>
+                            </Col>
+                            <Col xs="3">
+                                <Button onClick={this.toggleDelete} color="danger">Cancel</Button>
                             </Col>
                         </Row>
                     </ModalBody>
